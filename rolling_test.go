@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
+const ACCEPTABLE_ROUNDING_ERROR = 4
+
 var samples = [100]float64{
 	94, 61, 64, 38, 87, 93, 98, 51, 60, 41, 30, 94, 7, 30, 75, 69, 9, 93, 65, 34,
 	89, 45, 22, 42, 17, 55, 99, 10, 90, 79, 33, 62, 32, 50, 33, 65, 33, 0, 25, 38,
@@ -160,6 +162,46 @@ func TestNUnique3(t *testing.T) {
 	}
 	result := ro.Calc("nunique")
 	expected := 13.0
+	if result != expected {
+		t.Errorf("e.Value() is %v, wanted %v", result, expected)
+	}
+}
+
+func TestStd(t *testing.T) {
+	ro := NewRollingObject(100)
+	for _, f := range samples {
+		ro.Add(f)
+	}
+	result := ro.Calc("std")
+	result = math.Round(result*(10*ACCEPTABLE_ROUNDING_ERROR)) / (10 * ACCEPTABLE_ROUNDING_ERROR)
+	expected := 28.7250
+	if result != expected {
+		t.Errorf("e.Value() is %v, wanted %v", result, expected)
+	}
+}
+
+func TestStd2(t *testing.T) {
+	ro := NewRollingObject(10)
+	for _, f := range samples {
+		ro.Add(f)
+	}
+	result := ro.Calc("std")
+	result = math.Round(result*(10*ACCEPTABLE_ROUNDING_ERROR)) / (10 * ACCEPTABLE_ROUNDING_ERROR)
+	expected := 29.1500
+	if result != expected {
+		t.Errorf("e.Value() is %v, wanted %v", result, expected)
+	}
+}
+
+func TestStd3(t *testing.T) {
+	ro := NewRollingObject(20)
+	ro.SetIgnoreZeroValues(true)
+	for _, f := range suspectSamples {
+		ro.Add(f)
+	}
+	result := ro.Calc("std")
+	result = math.Round(result*(10*ACCEPTABLE_ROUNDING_ERROR)) / (10 * ACCEPTABLE_ROUNDING_ERROR)
+	expected := 27.8750
 	if result != expected {
 		t.Errorf("e.Value() is %v, wanted %v", result, expected)
 	}

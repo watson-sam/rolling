@@ -66,34 +66,18 @@ func (ro *RollingObject) Add(value float64) {
 // - avg: find the arithmetic mean of the values
 // - count: find the number of values
 // - nunique: find the number of distinct values
+// - std: find the standard deviation of the values
 func (ro *RollingObject) Calc(calc string) float64 {
-	result := 0.0
 	if calc == "sum" {
-		for _, v := range ro.values {
-			result += v
-		}
-		return result
+		return Sum(ro.values)
 	} else if calc == "avg" {
-		for _, v := range ro.values {
-			result += v
-		}
-		return result / float64(len(ro.values))
+		return Avg(ro.values)
 	} else if calc == "count" {
 		return float64(len(ro.values))
 	} else if calc == "nunique" {
-		dist := []float64{}
-		for _, i := range ro.values {
-			contained := false
-			for _, j := range dist {
-				if i == j {
-					contained = true
-				}
-			}
-			if !contained {
-				dist = append(dist, i)
-			}
-		}
-		return float64(len(dist))
+		return NUnique(ro.values)
+	} else if calc == "std" {
+		return Std(ro.values)
 	}
 	panic("calc argument given is not valid, must be one of: 'sum', 'avg', 'count', 'nunique'")
 }
