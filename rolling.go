@@ -79,7 +79,7 @@ func (ro *RollingObject) Calc(calc string) float64 {
 	} else if calc == "std" {
 		return Std(ro.values)
 	}
-	panic("calc argument given is not valid, must be one of: 'sum', 'avg', 'count', 'nunique'")
+	panic("Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'count', 'nunique' or 'std', recieved value: " + calc)
 }
 
 // NewRollingObject - set up a new rolling object with a supplied window with the default settings
