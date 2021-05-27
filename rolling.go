@@ -1,0 +1,110 @@
+// Package rolling implements rolling sum, mean (avg), count and nunique calculations over a
+// given number of float64 values.
+package rolling
+
+import "math"
+
+const (
+	// By default nan values are ignored
+	ignoreNanValuesDefault bool = true
+	// By default infinite values (both positive and negative) are ignored
+	ignoreInfValuesDefault bool = true
+	// By default zero values are treated as a per any other number (ie not ignored)
+	ignoreZeroValuesDefault bool = false
+)
+
+// RollingObject - the struct that holds the 'settings' and current values to be used in any
+// calcuations.
+type RollingObject struct {
+	window           int
+	values           []float64
+	ignoreNanValues  bool
+	ignoreInfValues  bool
+	ignoreZeroValues bool
+}
+
+// SetIgnoreInfValues - controls if we want to ignore non number values when producing the outputs
+// of any calcuations
+func (ro *RollingObject) SetIgnoreNanValues(ignoreNanValues bool) {
+	ro.ignoreNanValues = ignoreNanValues
+}
+
+// SetIgnoreInfValues - controls if we want to ignore infintes (both positive and negative values)
+// when producing the outputs of any calcuations
+func (ro *RollingObject) SetIgnoreInfValues(ignoreInfValues bool) {
+	ro.ignoreInfValues = ignoreInfValues
+}
+
+// SetIgnoreInfValues - controls if we want to ignore zero values when producing the outputs of
+// any calcuations
+func (ro *RollingObject) SetIgnoreZeroValues(ignoreZeroValues bool) {
+	ro.ignoreZeroValues = ignoreZeroValues
+}
+
+// Add - if given value meets the given conditions, append to the values used in the calculation,
+// adjusting this so it it relevant for the supplied window
+func (ro *RollingObject) Add(value float64) {
+	if ro.ignoreNanValues && math.IsNaN(value) {
+		return
+	}
+	if ro.ignoreInfValues && (math.IsInf(value, 1) || math.IsInf(value, -1)) {
+		return
+	}
+	if ro.ignoreZeroValues && (value == 0) {
+		return
+	}
+
+	if len(ro.values) >= ro.window {
+		ro.values = ro.values[1:len(ro.values)]
+	}
+	ro.values = append(ro.values, value)
+}
+
+// Calc - calculate the value of the supplied calculation based from the values stored within the
+// rolling object values. Options are:
+// - sum: find the total of all the values
+// - avg: find the arithmetic mean of the values
+// - count: find the number of values
+// - nunique: find the number of distinct values
+func (ro *RollingObject) Calc(calc string) float64 {
+	result := 0.0
+	if calc == "sum" {
+		for _, v := range ro.values {
+			result += v
+		}
+		return result
+	} else if calc == "avg" {
+		for _, v := range ro.values {
+			result += v
+		}
+		return result / float64(len(ro.values))
+	} else if calc == "count" {
+		return float64(len(ro.values))
+	} else if calc == "nunique" {
+		dist := []float64{}
+		for _, i := range ro.values {
+			contained := false
+			for _, j := range dist {
+				if i == j {
+					contained = true
+				}
+			}
+			if !contained {
+				dist = append(dist, i)
+			}
+		}
+		return float64(len(dist))
+	}
+	panic("calc argument given is not valid, must be one of: 'sum', 'avg', 'count', 'nunique'")
+}
+
+// NewRollingObject - set up a new rolling object with a supplied window with the default settings
+func NewRollingObject(window int) *RollingObject {
+	return &RollingObject{
+		window:           window,
+		values:           []float64{},
+		ignoreNanValues:  ignoreNanValuesDefault,
+		ignoreInfValues:  ignoreInfValuesDefault,
+		ignoreZeroValues: ignoreZeroValuesDefault,
+	}
+}
