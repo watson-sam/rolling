@@ -1,6 +1,6 @@
 // Package rolling implements rolling sum, mean (avg), count and nunique calculations over a
 // given number of float64 values.
-package rolling
+package streak
 
 import "math"
 
@@ -14,7 +14,7 @@ const (
 )
 
 // RollingObject - the struct that holds the 'settings' and current values to be used in any
-// calcuations.
+// calculations.
 type RollingObject struct {
 	window           int
 	values           []float64
@@ -24,19 +24,19 @@ type RollingObject struct {
 }
 
 // SetIgnoreInfValues - controls if we want to ignore non number values when producing the outputs
-// of any calcuations
+// of any calculations
 func (ro *RollingObject) SetIgnoreNanValues(ignoreNanValues bool) {
 	ro.ignoreNanValues = ignoreNanValues
 }
 
-// SetIgnoreInfValues - controls if we want to ignore infintes (both positive and negative values)
-// when producing the outputs of any calcuations
+// SetIgnoreInfValues - controls if we want to ignore infinites (both positive and negative values)
+// when producing the outputs of any calculations
 func (ro *RollingObject) SetIgnoreInfValues(ignoreInfValues bool) {
 	ro.ignoreInfValues = ignoreInfValues
 }
 
 // SetIgnoreInfValues - controls if we want to ignore zero values when producing the outputs of
-// any calcuations
+// any calculations
 func (ro *RollingObject) SetIgnoreZeroValues(ignoreZeroValues bool) {
 	ro.ignoreZeroValues = ignoreZeroValues
 }
@@ -79,7 +79,7 @@ func (ro *RollingObject) Calc(calc string) float64 {
 	} else if calc == "std" {
 		return Std(ro.values)
 	}
-	panic("Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'count', 'nunique' or 'std', recieved value: " + calc)
+	panic("Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'count', 'nunique' or 'std', received value: " + calc)
 }
 
 // NewRollingObject - set up a new rolling object with a supplied window with the default settings
