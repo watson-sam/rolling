@@ -1,6 +1,6 @@
 // Package rolling implements rolling sum, mean (avg), count and nunique calculations over a
 // given number of float64 values.
-package streak
+package rolling
 
 import "math"
 
