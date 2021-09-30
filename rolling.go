@@ -73,7 +73,7 @@ func (ro *RollingObject) Calc(calc string) float64 {
 	} else if calc == "avg" {
 		return Avg(ro.values)
 	} else if calc == "count" {
-		return float64(len(ro.values))
+		return Count(ro.values)
 	} else if calc == "nunique" {
 		return NUnique(ro.values)
 	} else if calc == "std" {

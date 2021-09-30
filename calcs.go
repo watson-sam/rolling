@@ -15,6 +15,11 @@ func Avg(values []float64) (result float64) {
 	return Sum(values) / float64(len(values))
 }
 
+// Count - find the number of values
+func Count(values []float64) (result float64) {
+	return float64(len(values))
+}
+
 // NUnique - find the number of distinct values
 func NUnique(values []float64) float64 {
 	dist := []float64{}
