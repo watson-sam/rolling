@@ -74,12 +74,16 @@ func (ro *RollingObject) Calc(calc string) float64 {
 		return Avg(ro.values)
 	} else if calc == "count" {
 		return Count(ro.values)
+	} else if calc == "max" {
+		return Max(ro.values)
+	} else if calc == "min" {
+		return Min(ro.values)
 	} else if calc == "nunique" {
 		return NUnique(ro.values)
 	} else if calc == "std" {
 		return Std(ro.values)
 	}
-	panic("Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'count', 'nunique' or 'std', received value: " + calc)
+	panic("Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'min', 'max', 'count', 'nunique' or 'std', received value: " + calc)
 }
 
 // NewRollingObject - set up a new rolling object with a supplied window with the default settings

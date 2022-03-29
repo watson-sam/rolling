@@ -39,3 +39,21 @@ func TestCalcsStd(t *testing.T) {
 		t.Errorf("e.Value() is %v, wanted %v", result, expected)
 	}
 }
+
+func TestCalcsMin(t *testing.T) {
+	result := Min(calcSamples)
+	result = math.Round(result*(10*ACCEPTABLE_ROUNDING_ERROR)) / (10 * ACCEPTABLE_ROUNDING_ERROR)
+	expected := 1.0
+	if result != expected {
+		t.Errorf("e.Value() is %v, wanted %v", result, expected)
+	}
+}
+
+func TestCalcsMax(t *testing.T) {
+	result := Max(calcSamples)
+	result = math.Round(result*(10*ACCEPTABLE_ROUNDING_ERROR)) / (10 * ACCEPTABLE_ROUNDING_ERROR)
+	expected := 3.0
+	if result != expected {
+		t.Errorf("e.Value() is %v, wanted %v", result, expected)
+	}
+}

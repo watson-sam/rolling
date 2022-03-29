@@ -20,9 +20,31 @@ func Count(values []float64) (result float64) {
 	return float64(len(values))
 }
 
+// Min - find the minimum value
+func Min(values []float64) (min float64) {
+	min = math.Inf(1)
+	for _, vi := range values {
+		if min > vi {
+			min = vi
+		}
+	}
+	return min
+}
+
+// Max - find the maximum value
+func Max(values []float64) (max float64) {
+	max = math.Inf(-1)
+	for _, vi := range values {
+		if max < vi {
+			max = vi
+		}
+	}
+	return max
+}
+
 // NUnique - find the number of distinct values
 func NUnique(values []float64) float64 {
-	dist := []float64{}
+	var dist []float64
 	for _, vi := range values {
 		contained := false
 		for _, vj := range dist {

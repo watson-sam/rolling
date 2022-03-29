@@ -1,6 +1,6 @@
 # Rolling
 
-This repo provides a solution to finding a number of statistics (sum, mean, count, number distinct) 
+This repo provides a solution to finding a number of statistics (sum, mean, min, max, count, number distinct) 
 values over a rolling window in Golang.
 
 ## Docs
@@ -30,6 +30,8 @@ func main() {
 	ro.Calc("avg")     // => 18.0
 	ro.Calc("count")   // => 3.0
 	ro.Calc("nunique") // => 2.0
+	ro.Calc("min") // => 4.0
+	ro.Calc("max") // => 75.0
 }
 ```
 

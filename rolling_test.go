@@ -130,6 +130,30 @@ func TestCount3(t *testing.T) {
 	}
 }
 
+func TestMin(t *testing.T) {
+	ro := NewRollingObject(100)
+	for _, f := range samples {
+		ro.Add(f)
+	}
+	result := ro.Calc("min")
+	expected := 0.0
+	if result != expected {
+		t.Errorf("e.Value() is %v, wanted %v", result, expected)
+	}
+}
+
+func TestMax(t *testing.T) {
+	ro := NewRollingObject(100)
+	for _, f := range samples {
+		ro.Add(f)
+	}
+	result := ro.Calc("max")
+	expected := 100.0
+	if result != expected {
+		t.Errorf("e.Value() is %v, wanted %v", result, expected)
+	}
+}
+
 func TestNUnique(t *testing.T) {
 	ro := NewRollingObject(100)
 	for _, f := range samples {

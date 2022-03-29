@@ -52,11 +52,11 @@ func (ro *RollingTimeObject) SetIgnoreZeroValues(ignoreZeroValues bool) {
 
 func (ro *RollingTimeObject) GetCutoffDate(date time.Time) (cutoffDate time.Time) {
 	if ro.windowRange == "day" {
-		cutoffDate = date.AddDate(0, 0, ro.window)
+		cutoffDate = date.AddDate(0, 0, -ro.window)
 	} else if ro.windowRange == "month" {
-		cutoffDate = date.AddDate(0, ro.window, 0)
+		cutoffDate = date.AddDate(0, -ro.window, 0)
 	} else if ro.windowRange == "year" {
-		cutoffDate = date.AddDate(ro.window, 0, 0)
+		cutoffDate = date.AddDate(-ro.window, 0, 0)
 	} else {
 		panic("windowRange variable not recognized, given value: " + ro.windowRange)
 	}
@@ -69,7 +69,7 @@ func (ro *RollingTimeObject) FilterValues(date time.Time) {
 	filtered := make(valueAndTimes, len(ro.values))
 	k := 0
 	for _, vad := range ro.values {
-		if vad.date.Before(cutoffDate) { // filter
+		if vad.date.After(cutoffDate) { // filter
 			filtered[k] = vad
 			k++
 		}
@@ -107,13 +107,17 @@ func (ro *RollingTimeObject) Calc(calc string) float64 {
 	} else if calc == "avg" {
 		return Avg(values)
 	} else if calc == "count" {
-		return float64(len(values))
+		return Count(values)
+	} else if calc == "max" {
+		return Max(values)
+	} else if calc == "min" {
+		return Min(values)
 	} else if calc == "nunique" {
 		return NUnique(values)
 	} else if calc == "std" {
 		return Std(values)
 	}
-	panic("Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'count', 'nunique' or 'std', recieved value: " + calc)
+	panic("Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'min', 'max', 'count', 'nunique' or 'std', recieved value: " + calc)
 }
 
 // NewRollingObject - set up a new rolling object with a supplied window with the default settings
