@@ -8,8 +8,9 @@ import (
 )
 
 type valueAndTime struct {
-	value float64
-	date  time.Time
+	value    float64
+	date     time.Time
+	weighted float64
 }
 
 type valueAndTimes []valueAndTime
@@ -17,6 +18,13 @@ type valueAndTimes []valueAndTime
 func (vat *valueAndTimes) GetValues() (values []float64) {
 	for _, v := range *vat {
 		values = append(values, v.value)
+	}
+	return values
+}
+
+func (vat *valueAndTimes) GetWeighted() (values []float64) {
+	for _, v := range *vat {
+		values = append(values, v.weighted)
 	}
 	return values
 }
@@ -30,6 +38,7 @@ type RollingTimeObject struct {
 	ignoreNanValues  bool
 	ignoreInfValues  bool
 	ignoreZeroValues bool
+	weight           float64
 }
 
 // SetIgnoreInfValues - controls if we want to ignore non number values when producing the outputs
@@ -101,7 +110,12 @@ func (ro *RollingTimeObject) Add(value float64, date time.Time) {
 // - nunique: find the number of distinct values
 // - std: find the standard deviation of the values
 func (ro *RollingTimeObject) Calc(calc string) float64 {
-	values := ro.values.GetValues()
+	var values []float64
+	if ro.weight > 0 {
+		values = ro.values.GetWeighted()
+	} else {
+		values = ro.values.GetValues()
+	}
 	if calc == "sum" {
 		return Sum(values)
 	} else if calc == "avg" {
