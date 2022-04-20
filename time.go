@@ -39,6 +39,7 @@ type RollingTimeObject struct {
 	ignoreInfValues  bool
 	ignoreZeroValues bool
 	weight           float64
+	weighted         []float64
 }
 
 // SetIgnoreInfValues - controls if we want to ignore non number values when producing the outputs
@@ -112,7 +113,7 @@ func (ro *RollingTimeObject) Add(value float64, date time.Time) {
 func (ro *RollingTimeObject) Calc(calc string) float64 {
 	var values []float64
 	if ro.weight > 0 {
-		values = ro.values.GetWeighted()
+		values = ro.weighted
 	} else {
 		values = ro.values.GetValues()
 	}
