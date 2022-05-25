@@ -3,8 +3,6 @@ package rolling
 import "time"
 
 func (ro *RollingTimeObject) WeightValues(date time.Time) {
-	// ro.FilterValues(date)
-	// weighted := make(valueAndTimes, len(ro.values))
 	ro.weighted = []float64{}
 	for _, vad := range ro.values {
 		days := date.Sub(vad.date).Hours() / 24

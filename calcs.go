@@ -59,11 +59,16 @@ func NUnique(values []float64) float64 {
 	return float64(len(dist))
 }
 
-// Std - find the standard deviation of the values
-func Std(values []float64) (result float64) {
+// Var - find the variance of the values
+func Var(values []float64) (result float64) {
 	mean := Avg(values)
 	for _, v := range values {
 		result += math.Pow(v-mean, 2)
 	}
-	return math.Sqrt(result / float64(len(values)))
+	return result / float64(len(values))
+}
+
+// Std - find the standard deviation of the values
+func Std(values []float64) (result float64) {
+	return math.Sqrt(Var(values))
 }
