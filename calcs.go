@@ -72,3 +72,26 @@ func Var(values []float64) (result float64) {
 func Std(values []float64) (result float64) {
 	return math.Sqrt(Var(values))
 }
+
+func runCalc(calc string, values []float64) float64 {
+	if calc == "sum" {
+		return Sum(values)
+	} else if calc == "avg" {
+		return Avg(values)
+	} else if calc == "count" {
+		return Count(values)
+	} else if calc == "max" {
+		return Max(values)
+	} else if calc == "min" {
+		return Min(values)
+	} else if calc == "nunique" {
+		return NUnique(values)
+	} else if calc == "std" {
+		return Std(values)
+	} else if calc == "var" {
+		return Var(values)
+	}
+	panic(
+		"Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'min', 'max', 'count', 'nunique', 'std' or 'var', received value: " + calc,
+	)
+}

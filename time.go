@@ -15,16 +15,20 @@ type valueAndTime struct {
 
 type valueAndTimes []valueAndTime
 
-func (vat *valueAndTimes) GetValues() (values []float64) {
+func (vat *valueAndTimes) GetValues(date time.Time) (values []float64) {
 	for _, v := range *vat {
-		values = append(values, v.value)
+		if !v.date.Truncate(24 * time.Hour).Equal(date.Truncate(24 * time.Hour)) {
+			values = append(values, v.value)
+		}
 	}
 	return values
 }
 
-func (vat *valueAndTimes) GetWeighted() (values []float64) {
+func (vat *valueAndTimes) GetWeighted(date time.Time) (values []float64) {
 	for _, v := range *vat {
-		values = append(values, v.weighted)
+		if !v.date.Truncate(24 * time.Hour).Equal(date.Truncate(24 * time.Hour)) {
+			values = append(values, v.weighted)
+		}
 	}
 	return values
 }
@@ -110,29 +114,14 @@ func (ro *RollingTimeObject) Add(value float64, date time.Time) {
 // - count: find the number of values
 // - nunique: find the number of distinct values
 // - std: find the standard deviation of the values
-func (ro *RollingTimeObject) Calc(calc string) float64 {
+func (ro *RollingTimeObject) Calc(calc string, date time.Time) float64 {
 	var values []float64
 	if ro.weight > 0 {
 		values = ro.weighted
 	} else {
-		values = ro.values.GetValues()
+		values = ro.values.GetValues(date)
 	}
-	if calc == "sum" {
-		return Sum(values)
-	} else if calc == "avg" {
-		return Avg(values)
-	} else if calc == "count" {
-		return Count(values)
-	} else if calc == "max" {
-		return Max(values)
-	} else if calc == "min" {
-		return Min(values)
-	} else if calc == "nunique" {
-		return NUnique(values)
-	} else if calc == "std" {
-		return Std(values)
-	}
-	panic("Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'min', 'max', 'count', 'nunique' or 'std', recieved value: " + calc)
+	return runCalc(calc, values)
 }
 
 // NewRollingObject - set up a new rolling object with a supplied window with the default settings
