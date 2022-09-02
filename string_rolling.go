@@ -38,7 +38,8 @@ func (ro *RollingStringObject) Values() []string {
 }
 
 func (ro *RollingStringObject) Join(sep string, latestFirst bool) string {
-	tnRtn := ro.values
+	tnRtn := make([]string, len(ro.values))
+	copy(tnRtn, ro.values)
 	if latestFirst {
 		last := len(tnRtn) - 1
 		for i := 0; i < len(tnRtn)/2; i++ {
