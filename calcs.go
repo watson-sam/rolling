@@ -90,6 +90,8 @@ func runCalc(calc string, values []float64) float64 {
 		return Std(values)
 	} else if calc == "var" {
 		return Var(values)
+	} else if calc == "prod" {
+		return Prod(values)
 	}
 	panic(
 		"Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'min', 'max', 'count', 'nunique', 'std', 'var' or 'prod', received value: " + calc,
