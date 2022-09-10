@@ -67,6 +67,7 @@ func Std(values []float64) (result float64) {
 
 // Prod - find the product of all values
 func Prod(values []float64) (result float64) {
+	result = 1
 	for _, v := range values {
 		result *= v
 	}
