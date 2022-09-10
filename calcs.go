@@ -2,7 +2,7 @@ package rolling
 
 import "math"
 
-// Sum - find the product of all values
+// Sum - find the sum of all values
 func Sum(values []float64) (result float64) {
 	for _, v := range values {
 		result += v
@@ -44,17 +44,9 @@ func Max(values []float64) (max float64) {
 
 // NUnique - find the number of distinct values
 func NUnique(values []float64) float64 {
-	var dist []float64
+	dist := make(map[float64]struct{})
 	for _, vi := range values {
-		contained := false
-		for _, vj := range dist {
-			if vi == vj {
-				contained = true
-			}
-		}
-		if !contained {
-			dist = append(dist, vi)
-		}
+		dist[vi] = struct{}{}
 	}
 	return float64(len(dist))
 }
@@ -71,6 +63,14 @@ func Var(values []float64) (result float64) {
 // Std - find the standard deviation of the values
 func Std(values []float64) (result float64) {
 	return math.Sqrt(Var(values))
+}
+
+// Prod - find the product of all values
+func Prod(values []float64) (result float64) {
+	for _, v := range values {
+		result *= v
+	}
+	return result
 }
 
 func runCalc(calc string, values []float64) float64 {
@@ -92,6 +92,6 @@ func runCalc(calc string, values []float64) float64 {
 		return Var(values)
 	}
 	panic(
-		"Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'min', 'max', 'count', 'nunique', 'std' or 'var', received value: " + calc,
+		"Supplied `calc` argument is not valid - must be one of: 'sum', 'avg', 'min', 'max', 'count', 'nunique', 'std', 'var' or 'prod', received value: " + calc,
 	)
 }
